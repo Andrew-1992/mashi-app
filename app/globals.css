@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1B2A41;
+  --color-ink-soft: #3C4B63;
+  --color-vest: #FFC20E;
+  --color-vest-deep: #E0A800;
+  --color-road: #EEF0F2;
+  --color-tape: #DDE1E7;
+  --color-murram: #9A4A24;
+  --color-nile: #0E7C7B;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-road);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Wide cut of Archivo for the brand and headings, like road signage. */
+.wide {
+  font-variation-settings: "wdth" 125;
+  letter-spacing: -0.01em;
+}
+
+/* The Mashi sheet: a safety-vest yellow panel with a strip of reflective tape along the top. */
+.vest {
+  position: relative;
+}
+.vest::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 14px;
+  height: 7px;
+  background: repeating-linear-gradient(90deg, #eef0f3 0 22px, #c3c9d2 22px 44px);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+/* Map pins */
+.mashi-pin {
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(27, 42, 65, 0.45);
+}
+.mashi-pin--pickup { background: var(--color-nile); }
+.mashi-pin--dropoff { background: var(--color-ink); border-radius: 6px; }
+.mashi-pin--driver { background: var(--color-vest); border-color: var(--color-ink); }
+.mashi-pin--me { background: #2f7de1; }
+
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: #e5e3df;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Keep map zoom buttons clear of the top bar */
+.leaflet-top.leaflet-right {
+  top: 64px;
+}
+
+/* Pickup pulse while looking for a driver */
+.mashi-pin--pulse {
+  position: relative;
+}
+.mashi-pin--pulse::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 3px solid var(--color-nile);
+  animation: mashi-pulse 1.6s ease-out infinite;
+}
+@keyframes mashi-pulse {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(3.2); opacity: 0; }
+}
+
+/* Driver vehicle marker */
+.mashi-vehicle {
+  display: flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-vest);
+  border: 3px solid var(--color-ink);
+  font-size: 20px;
+  box-shadow: 0 3px 8px rgba(27, 42, 65, 0.45);
+  transition: transform 0.3s;
+}
+
+/* Fixed centre pin for drag-to-choose */
+.mashi-center-pin {
+  transition: transform 0.15s ease-out;
+}
+.mashi-center-pin[data-moving="true"] {
+  transform: translateY(-10px);
+}
+
+/* Indeterminate bar while searching */
+.mashi-searching {
+  position: relative;
+  overflow: hidden;
+}
+.mashi-searching::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background: var(--color-ink);
+  border-radius: 9999px;
+  animation: mashi-slide 1.4s ease-in-out infinite;
+}
+@keyframes mashi-slide {
+  from { left: -40%; }
+  to { left: 100%; }
+}
+
+/* Sheet content eases in when the step changes */
+.mashi-step {
+  animation: mashi-rise 0.22s ease-out;
+}
+@keyframes mashi-rise {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* ---------- Home page road scene ---------- */
+.mashi-road {
+  background:
+    /* dashed centre line */
+    repeating-linear-gradient(90deg, #ffc20e 0 34px, transparent 34px 64px) 0 calc(50% + 6px) / 100% 5px no-repeat,
+    /* kerbs */
+    linear-gradient(#d5dae1, #d5dae1) 0 0 / 100% 8px no-repeat,
+    linear-gradient(#d5dae1, #d5dae1) 0 100% / 100% 8px no-repeat,
+    #33415a;
+}
+
+/* Vehicles rest spread along the road when motion is reduced. */
+.mashi-drive {
+  left: var(--rest);
+}
+
+.mashi-drive:focus-visible {
+  outline-color: #ffc20e;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mashi-drive {
+    left: 0;
+    animation: mashi-drive var(--dur) linear var(--delay) infinite;
+  }
+  .mashi-drive:hover,
+  .mashi-drive:focus-visible {
+    animation-play-state: paused;
+  }
+  .mashi-drive .mashi-wheel {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mashi-spin 0.55s linear infinite;
+  }
+  .mashi-drive .mashi-bob {
+    animation: mashi-bob 0.35s ease-in-out infinite alternate;
+  }
+  .mashi-drive:hover .mashi-wheel,
+  .mashi-drive:hover .mashi-bob,
+  .mashi-drive:focus-visible .mashi-wheel,
+  .mashi-drive:focus-visible .mashi-bob {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes mashi-drive {
+  from { transform: translateX(-180px); }
+  to { transform: translateX(100vw); }
+}
+@keyframes mashi-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes mashi-bob {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1.5px); }
+}
