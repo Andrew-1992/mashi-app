@@ -7,37 +7,39 @@ const wrap = "mx-auto w-full max-w-5xl px-6 sm:px-10";
 export default function Home() {
   return (
     <main className="flex min-h-dvh flex-col">
-      {/* Top bar */}
-      <header className={`${wrap} flex items-center justify-between pt-[max(1rem,env(safe-area-inset-top))] pb-2`}>
-        <Link
-          href="/"
-          aria-label="Mashi home"
-          className="wide rounded-[50%] bg-vest px-6 py-2.5 text-lg leading-none font-black text-ink shadow-[0_6px_16px_-6px_rgba(27,42,65,0.45)]"
-        >
-          Mashi
-        </Link>
-        <div className="flex items-center gap-2">
-          <InstallButton />
-          <Link
-            href="/login"
-            className="rounded-full px-4 py-2 text-sm font-bold text-ink ring-1 ring-ink/15 transition hover:bg-white hover:ring-ink/30"
-          >
-            Sign in
-          </Link>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className={`${wrap} mashi-hero flex flex-1 flex-col items-center justify-center pt-2 pb-4`}>
+      {/* Hero: the photo fills the whole area, with the top bar on top of it */}
+      <section className="relative min-h-[300px] flex-1 overflow-hidden bg-ink">
         <h1 className="sr-only">Mashi. Wasulu mahal taki</h1>
+        {/* Blurred copy fills any space on wide screens, so the hero never shows empty bands */}
+        <img src="/hero.jpg" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl" />
         <img
           src="/hero.jpg"
           width={800}
           height={993}
           fetchPriority="high"
           alt="A young woman on a street in Juba laughing and raising her fist as she shows a Mashi ride booked on her phone"
-          className="h-[clamp(220px,40vh,460px)] w-auto rounded-[28px] object-cover shadow-[0_18px_40px_-18px_rgba(27,42,65,0.55)]"
+          className="mashi-hero-photo absolute inset-0 h-full w-full object-cover object-[50%_45%] sm:object-contain"
         />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-road to-transparent" aria-hidden="true" />
+
+        <header className={`${wrap} relative z-10 flex items-center justify-between pt-[max(1rem,env(safe-area-inset-top))] pb-2`}>
+          <Link
+            href="/"
+            aria-label="Mashi home"
+            className="wide rounded-[50%] bg-vest px-6 py-2.5 text-lg leading-none font-black text-ink shadow-[0_6px_16px_-6px_rgba(27,42,65,0.45)]"
+          >
+            Mashi
+          </Link>
+          <div className="flex items-center gap-2">
+            <InstallButton />
+            <Link
+              href="/login"
+              className="rounded-full bg-white/85 px-4 py-2 text-sm font-bold text-ink shadow-sm backdrop-blur transition hover:bg-white"
+            >
+              Sign in
+            </Link>
+          </div>
+        </header>
       </section>
 
       <RoadScene />
