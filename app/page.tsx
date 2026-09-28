@@ -1,5 +1,6 @@
 import Link from "next/link";
 import RoadScene from "@/components/RoadScene";
+import InstallButton from "@/components/InstallButton";
 
 const wrap = "mx-auto w-full max-w-5xl px-6 sm:px-10";
 
@@ -12,12 +13,15 @@ export default function Home() {
           <span className="size-2 rounded-full bg-nile" aria-hidden="true" />
           Now riding in Juba
         </span>
-        <Link
-          href="/login"
-          className="rounded-full px-4 py-2 text-sm font-bold text-ink ring-1 ring-ink/15 transition hover:bg-white hover:ring-ink/30"
-        >
-          Sign in
-        </Link>
+        <div className="flex items-center gap-2">
+          <InstallButton />
+          <Link
+            href="/login"
+            className="rounded-full px-4 py-2 text-sm font-bold text-ink ring-1 ring-ink/15 transition hover:bg-white hover:ring-ink/30"
+          >
+            Sign in
+          </Link>
+        </div>
       </header>
 
       {/* Hero */}

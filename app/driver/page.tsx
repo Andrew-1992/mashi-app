@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useProfile } from "@/lib/useProfile";
 import { roadKm, type LatLng } from "@/lib/geo";
+import { haptic } from "@/lib/haptics";
 import {
   PAYMENT_LABEL,
   VEHICLE_LABEL,
@@ -159,6 +160,28 @@ export default function DriverPage() {
     return () => clearInterval(t);
   }, [me, online, refreshRide, refreshOpen]);
 
+  // Keep the screen on while online so requests and GPS keep flowing.
+  useEffect(() => {
+    if (!online || !("wakeLock" in navigator)) return;
+    let lock: WakeLockSentinel | null = null;
+    const request = async () => {
+      try {
+        lock = await navigator.wakeLock.request("screen");
+      } catch {
+        /* not allowed right now, e.g. battery saver */
+      }
+    };
+    request();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") request();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      lock?.release().catch(() => undefined);
+    };
+  }, [online]);
+
   // Follow the phone's GPS while online.
   useEffect(() => {
     if (!online) return;
@@ -222,6 +245,7 @@ export default function DriverPage() {
       refreshOpen();
       return;
     }
+    haptic(30);
     setOpenRides([]);
     refreshRide();
   };
@@ -235,6 +259,7 @@ export default function DriverPage() {
     const { error } = await supabase.rpc("advance_ride", { p_ride: ride.id, p_status: next.to });
     setBusy(false);
     if (error) return setError(error.message);
+    haptic();
     if (next.to === "completed") {
       finishedByMe.current = true;
       setNotice(
@@ -343,7 +368,7 @@ export default function DriverPage() {
       <MashiMap pins={pins} onPick={onPick} fitKey={fitKey} />
       <TopBar title={online ? "Online" : "Offline"} />
 
-      <Sheet>
+      <Sheet expandKey={`${ride?.id ?? ""}-${ride?.status ?? ""}-${openRides.length}-${notice ?? ""}-${error ?? ""}`}>
         <ErrorNote message={error} onClose={() => setError(null)} />
         {notice && (
           <div className="mb-4 flex items-start justify-between gap-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold" role="status">

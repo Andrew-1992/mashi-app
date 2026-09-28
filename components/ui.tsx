@@ -1,13 +1,55 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
-export function Sheet({ children }: { children: React.ReactNode }) {
+/**
+ * Bottom sheet. Swipe the handle down to see the whole map, up (or tap) to bring it back.
+ * It opens again by itself whenever `expandKey` changes, e.g. when the trip status changes.
+ */
+export function Sheet({ children, expandKey }: { children: React.ReactNode; expandKey?: string }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const startY = useRef<number | null>(null);
+  const dragged = useRef(false);
+
+  useEffect(() => {
+    setCollapsed(false);
+  }, [expandKey]);
+
   return (
-    <section className="absolute inset-x-0 bottom-0 z-[500] mx-auto max-w-lg">
-      <div className="vest max-h-[70vh] overflow-y-auto rounded-t-[28px] bg-vest px-5 pt-9 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-ink shadow-[0_-10px_30px_rgba(27,42,65,0.28)]">
+    <section
+      className={`absolute inset-x-0 bottom-0 z-[500] mx-auto max-w-lg transition-transform duration-300 ease-out ${
+        collapsed ? "translate-y-[calc(100%-4.75rem)]" : ""
+      }`}
+    >
+      <div className="vest relative max-h-[70vh] overflow-y-auto overscroll-contain rounded-t-[28px] bg-vest px-5 pt-9 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-ink shadow-[0_-10px_30px_rgba(27,42,65,0.28)]">
+        <button
+          type="button"
+          aria-label={collapsed ? "Show trip details" : "Show full map"}
+          aria-expanded={!collapsed}
+          className="absolute inset-x-0 top-0 z-10 flex h-9 touch-none justify-center pt-1.5"
+          onPointerDown={(e) => {
+            startY.current = e.clientY;
+            dragged.current = false;
+          }}
+          onPointerUp={(e) => {
+            if (startY.current == null) return;
+            const dy = e.clientY - startY.current;
+            startY.current = null;
+            if (Math.abs(dy) > 25) {
+              dragged.current = true;
+              setCollapsed(dy > 0);
+            }
+          }}
+          onClick={() => {
+            if (!dragged.current) setCollapsed((c) => !c);
+            dragged.current = false;
+          }}
+        >
+          <span className="h-1.5 w-12 rounded-full bg-ink/35" />
+        </button>
         {children}
       </div>
     </section>

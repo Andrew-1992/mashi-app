@@ -1,11 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useProfile } from "@/lib/useProfile";
 import { roadKm } from "@/lib/geo";
+import { haptic } from "@/lib/haptics";
 import { loadSaved, reverseLabel, storeSaved, type Place, type SavedPlaces } from "@/lib/places";
 import { ACTIVE_STATUSES, type FareSetting, type PaymentMethod, type Ride, type VehicleType } from "@/lib/types";
 import type { Pin } from "@/components/MashiMap";
@@ -52,6 +53,38 @@ export default function RiderPage() {
   const [error, setError] = useState<string | null>(null);
 
   const ride = latestRide && latestRide.id !== dismissedId ? latestRide : null;
+
+  // ---------- Android back button ----------
+  // Leaving the home step adds one history entry, so "back" steps through the booking flow
+  // (map pin, then search, then options, then home) instead of closing the app.
+  const flow = useRef({ mode, pickup, dropoff, pinTarget });
+  const inHistory = useRef(false);
+  useEffect(() => {
+    flow.current = { mode, pickup, dropoff, pinTarget };
+  });
+  useEffect(() => {
+    if (mode !== "home" && !inHistory.current) {
+      window.history.pushState({ mashi: true }, "");
+      inHistory.current = true;
+    }
+  }, [mode]);
+  useEffect(() => {
+    const onBack = () => {
+      inHistory.current = false;
+      const f = flow.current;
+      if (f.mode === "home") return;
+      if (f.mode === "pinpick") {
+        const savedTarget = f.pinTarget === "home" || f.pinTarget === "work";
+        setMode(savedTarget || !f.dropoff ? "search" : "options");
+      } else if (f.mode === "search") {
+        setMode(f.pickup && f.dropoff ? "options" : "home");
+      } else {
+        setMode("home");
+      }
+    };
+    window.addEventListener("popstate", onBack);
+    return () => window.removeEventListener("popstate", onBack);
+  }, []);
   const rideActive = ride !== null && ACTIVE_STATUSES.includes(ride.status);
 
   useEffect(() => {
@@ -270,6 +303,7 @@ export default function RiderPage() {
     });
     setBusy(false);
     if (error) return setError(error.message);
+    haptic(30);
     setNote("");
     refreshRide();
   };
@@ -369,7 +403,7 @@ export default function RiderPage() {
         />
       )}
 
-      <Sheet>
+      <Sheet expandKey={`${mode}-${ride?.id ?? ""}-${ride?.status ?? ""}-${error ?? ""}`}>
         <ErrorNote message={error} onClose={() => setError(null)} />
 
         {ride ? (

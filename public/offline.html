@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#FFC20E" />
+<title>Mashi — offline</title>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: #EEF0F2; color: #1B2A41; }
+  main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 24px; max-width: 480px; }
+  h1 { font-size: 64px; line-height: 0.9; margin: 0; font-weight: 900; }
+  h2 { font-size: 24px; margin: 24px 0 8px; }
+  p { font-size: 17px; line-height: 1.5; color: #3C4B63; margin: 0; }
+  footer { background: #FFC20E; padding: 24px 24px max(24px, env(safe-area-inset-bottom)); }
+  button { width: 100%; height: 56px; border: 0; border-radius: 9999px; background: #1B2A41; color: #fff; font-size: 18px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <main>
+    <h1>Mashi</h1>
+    <h2>You're offline</h2>
+    <p>Check your data or Wi-Fi. If you're on a trip, your ride continues and you can pay your driver as agreed.</p>
+  </main>
+  <footer><button onclick="location.reload()">Try again</button></footer>
+</body>
+</html>

@@ -2,7 +2,7 @@
   "name": "Mashi",
   "short_name": "Mashi",
   "description": "Boda and tuk-tuk rides across Juba.",
-  "start_url": "/rider",
+  "start_url": "/start",
   "display": "standalone",
   "background_color": "#EEF0F2",
   "theme_color": "#FFC20E",
