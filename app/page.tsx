@@ -28,19 +28,26 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className={`${wrap} mashi-hero flex flex-1 flex-col items-center justify-center py-8 text-center`}>
-        <h1 className="wide text-[clamp(4.5rem,18vw,10rem)] leading-[0.85] font-black text-ink">Mashi</h1>
-        <p className="wide mt-4 text-[clamp(1.5rem,5vw,2.5rem)] leading-tight font-bold">Wasulu mahal taki</p>
+      <section className={`${wrap} mashi-hero flex flex-1 flex-col items-center justify-center pt-2 pb-4`}>
+        <h1 className="sr-only">Mashi. Wasulu mahal taki</h1>
+        <img
+          src="/hero.jpg"
+          width={800}
+          height={993}
+          fetchPriority="high"
+          alt="A young woman on a street in Juba laughing and raising her fist as she shows a Mashi ride booked on her phone"
+          className="h-[clamp(220px,40vh,460px)] w-auto rounded-[28px] object-cover shadow-[0_18px_40px_-18px_rgba(27,42,65,0.55)]"
+        />
       </section>
 
       <RoadScene />
 
       {/* Actions */}
       <section className="bg-vest pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-        <div className={`${wrap} flex flex-col gap-3 sm:flex-row sm:justify-center`}>
+        <div className={`${wrap} grid grid-cols-2 gap-3 sm:flex sm:justify-center`}>
           <Link
             href="/rider"
-            className="inline-flex h-14 items-center justify-center gap-3 rounded-full bg-ink px-9 text-lg font-bold text-white shadow-[0_10px_24px_-10px_rgba(27,42,65,0.7)] transition duration-200 hover:-translate-y-0.5 hover:bg-ink-soft active:translate-y-0 active:scale-[0.98] sm:min-w-60"
+            className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-ink px-4 text-base whitespace-nowrap sm:gap-3 sm:px-9 sm:text-lg font-bold text-white shadow-[0_10px_24px_-10px_rgba(27,42,65,0.7)] transition duration-200 hover:-translate-y-0.5 hover:bg-ink-soft active:translate-y-0 active:scale-[0.98] sm:min-w-60"
           >
             <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
               <path
@@ -52,14 +59,15 @@ export default function Home() {
           </Link>
           <Link
             href="/driver"
-            className="inline-flex h-14 items-center justify-center gap-3 rounded-full bg-white/80 px-9 text-lg font-bold text-ink ring-1 ring-ink/10 transition duration-200 hover:-translate-y-0.5 hover:bg-white active:translate-y-0 active:scale-[0.98] sm:min-w-60"
+            className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-white/80 px-4 text-base whitespace-nowrap sm:gap-3 sm:px-9 sm:text-lg font-bold text-ink ring-1 ring-ink/10 transition duration-200 hover:-translate-y-0.5 hover:bg-white active:translate-y-0 active:scale-[0.98] sm:min-w-60"
           >
             <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true" fill="none" stroke="#1B2A41" strokeWidth="2.2">
               <circle cx="12" cy="12" r="9" />
               <circle cx="12" cy="12" r="2.5" />
               <path d="M3.5 10.5h6M14.5 10.5h6M12 14.5V21" strokeLinecap="round" />
             </svg>
-            Drive with Mashi
+            <span className="sm:hidden">Drive &amp; earn</span>
+            <span className="hidden sm:inline">Drive with Mashi</span>
           </Link>
         </div>
         <ul className={`${wrap} mt-5 flex justify-center gap-2 text-sm font-semibold`} aria-label="Why Mashi">
