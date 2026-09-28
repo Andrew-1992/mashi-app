@@ -203,3 +203,12 @@ body {
   from { transform: translateY(0); }
   to { transform: translateY(-1.5px); }
 }
+
+/* One entrance moment for the home page hero */
+@media (prefers-reduced-motion: no-preference) {
+  .mashi-hero > * {
+    animation: mashi-rise 0.6s ease-out both;
+  }
+  .mashi-hero > *:nth-child(2) { animation-delay: 0.08s; }
+  .mashi-hero > *:nth-child(3) { animation-delay: 0.16s; }
+}

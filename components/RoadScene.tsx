@@ -87,24 +87,24 @@ function Car() {
 }
 
 const VEHICLES = [
-  { key: "boda", label: "Book a boda", art: <Boda />, width: "w-[96px] sm:w-[112px]", lane: "near", dur: "7s", delay: "-2s", rest: "8%" },
-  { key: "car", label: "Book a car", art: <Car />, width: "w-[128px] sm:w-[156px]", lane: "far", dur: "11s", delay: "-1.5s", rest: "38%" },
-  { key: "tuktuk", label: "Book a tuk-tuk", art: <TukTuk />, width: "w-[110px] sm:w-[126px]", lane: "far", dur: "11s", delay: "-7s", rest: "70%" },
+  { key: "boda", label: "Book a boda", art: <Boda />, width: "w-[88px] sm:w-[104px]", lane: "near", dur: "7s", delay: "-2s", rest: "8%" },
+  { key: "car", label: "Book a car", art: <Car />, width: "w-[112px] sm:w-[136px]", lane: "far", dur: "11s", delay: "-1.5s", rest: "38%" },
+  { key: "tuktuk", label: "Book a tuk-tuk", art: <TukTuk />, width: "w-[96px] sm:w-[112px]", lane: "far", dur: "11s", delay: "-7s", rest: "70%" },
 ];
 
 export default function RoadScene() {
   return (
     <section aria-label="Mashi rides" className="relative">
-      <p className="mx-auto mb-2 max-w-3xl px-6 text-right text-sm font-semibold text-ink-soft sm:px-12">
+      <p className="mx-auto mb-2 w-full max-w-5xl px-6 text-right text-sm font-semibold text-ink-soft sm:px-10">
         Tap a ride to book
       </p>
-      <div className="mashi-road relative h-[190px] overflow-hidden sm:h-[210px]">
+      <div className="mashi-road relative h-[168px] overflow-hidden sm:h-[184px]">
         {VEHICLES.map((v) => (
           <Link
             key={v.key}
             href="/rider"
             aria-label={v.label}
-            className={`mashi-drive group absolute ${v.width} ${v.lane === "near" ? "bottom-[14px] z-20" : "bottom-[96px] z-10 sm:bottom-[108px]"}`}
+            className={`mashi-drive group absolute ${v.width} ${v.lane === "near" ? "bottom-[10px] z-20" : "bottom-[90px] z-10 sm:bottom-[98px]"}`}
             style={{ "--dur": v.dur, "--delay": v.delay, "--rest": v.rest } as React.CSSProperties}
           >
             <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-sm font-bold whitespace-nowrap text-ink opacity-0 shadow-md transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
