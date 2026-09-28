@@ -95,8 +95,8 @@ const VEHICLES = [
 export default function RoadScene() {
   return (
     <section aria-label="Mashi rides" className="relative">
-      <p className="mx-auto mb-2 w-full max-w-5xl px-6 text-right text-sm font-semibold text-ink-soft sm:px-10">
-        Tap a ride to book
+      <p className="mx-auto mb-2 w-full max-w-5xl px-6 text-center text-sm font-semibold text-ink-soft sm:px-10">
+        👆 Tap a ride to book
       </p>
       <div className="mashi-road relative h-[168px] overflow-hidden sm:h-[184px]">
         {VEHICLES.map((v) => (

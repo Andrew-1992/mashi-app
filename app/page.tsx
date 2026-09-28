@@ -9,10 +9,13 @@ export default function Home() {
     <main className="flex min-h-dvh flex-col">
       {/* Top bar */}
       <header className={`${wrap} flex items-center justify-between pt-[max(1rem,env(safe-area-inset-top))] pb-2`}>
-        <span className="flex items-center gap-2 text-sm font-semibold text-ink-soft">
-          <span className="size-2 rounded-full bg-nile" aria-hidden="true" />
-          Now riding in Juba
-        </span>
+        <Link
+          href="/"
+          aria-label="Mashi home"
+          className="wide rounded-[50%] bg-vest px-6 py-2.5 text-lg leading-none font-black text-ink shadow-[0_6px_16px_-6px_rgba(27,42,65,0.45)]"
+        >
+          Mashi
+        </Link>
         <div className="flex items-center gap-2">
           <InstallButton />
           <Link
@@ -25,19 +28,16 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className={`${wrap} mashi-hero flex flex-1 flex-col justify-center py-6 sm:py-8`}>
-        <h1 className="wide text-[clamp(4rem,14vw,8.5rem)] leading-[0.85] font-black text-ink">Mashi</h1>
-        <p className="wide mt-4 text-[clamp(1.5rem,4vw,2.25rem)] leading-tight font-bold">Wasulu mahal taki</p>
-        <p className="mt-3 max-w-md text-base leading-relaxed text-ink-soft sm:text-lg">
-          Boda, tuk-tuk and car rides across Juba. See your price before you book, and pay in cash or mobile money.
-        </p>
+      <section className={`${wrap} mashi-hero flex flex-1 flex-col items-center justify-center py-8 text-center`}>
+        <h1 className="wide text-[clamp(4.5rem,18vw,10rem)] leading-[0.85] font-black text-ink">Mashi</h1>
+        <p className="wide mt-4 text-[clamp(1.5rem,5vw,2.5rem)] leading-tight font-bold">Wasulu mahal taki</p>
       </section>
 
       <RoadScene />
 
       {/* Actions */}
       <section className="bg-vest pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-        <div className={`${wrap} flex flex-col gap-3 sm:flex-row sm:items-center`}>
+        <div className={`${wrap} flex flex-col gap-3 sm:flex-row sm:justify-center`}>
           <Link
             href="/rider"
             className="inline-flex h-14 items-center justify-center gap-3 rounded-full bg-ink px-9 text-lg font-bold text-white shadow-[0_10px_24px_-10px_rgba(27,42,65,0.7)] transition duration-200 hover:-translate-y-0.5 hover:bg-ink-soft active:translate-y-0 active:scale-[0.98] sm:min-w-60"
@@ -61,10 +61,18 @@ export default function Home() {
             </svg>
             Drive with Mashi
           </Link>
-          <p className="text-sm text-ink-soft sm:ml-auto sm:max-w-56 sm:text-right">
-            Every driver is registered and verified before their first trip.
-          </p>
         </div>
+        <ul className={`${wrap} mt-5 flex justify-center gap-2 text-sm font-semibold`} aria-label="Why Mashi">
+          <li className="flex items-center gap-1.5 rounded-full bg-white/60 px-3 py-1.5">
+            <span aria-hidden="true">✅</span> Verified drivers
+          </li>
+          <li className="flex items-center gap-1.5 rounded-full bg-white/60 px-3 py-1.5">
+            <span aria-hidden="true">💵</span> Cash
+          </li>
+          <li className="flex items-center gap-1.5 rounded-full bg-white/60 px-3 py-1.5">
+            <span aria-hidden="true">📱</span> Mobile money
+          </li>
+        </ul>
       </section>
     </main>
   );
