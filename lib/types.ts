@@ -9,6 +9,8 @@ export type Profile = {
   full_name: string;
   phone: string;
   role: Role;
+  emergency_name?: string | null;
+  emergency_phone?: string | null;
   created_at: string;
 };
 
@@ -43,6 +45,7 @@ export type Ride = {
   commission_ssp: number;
   driver_earnings_ssp: number;
   rider_rating: number | null;
+  share_token: string;
   payment_method: PaymentMethod;
   status: RideStatus;
   created_at: string;

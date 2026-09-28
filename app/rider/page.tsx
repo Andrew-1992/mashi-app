@@ -407,7 +407,7 @@ export default function RiderPage() {
         <ErrorNote message={error} onClose={() => setError(null)} />
 
         {ride ? (
-          <TripStatus ride={ride} driver={driver} busy={busy} onCancel={cancelRide} onDone={bookAnother} onRate={rateRide} />
+          <TripStatus ride={ride} userId={userId} profile={profile} driver={driver} busy={busy} onCancel={cancelRide} onDone={bookAnother} onRate={rateRide} />
         ) : mode === "pinpick" ? (
           <div className="mashi-step flex flex-col gap-3">
             <p className="text-sm font-semibold text-ink-soft">

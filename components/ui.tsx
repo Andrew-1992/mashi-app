@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 
 /**
  * Bottom sheet. Swipe the handle down to see the whole map, up (or tap) to bring it back.
@@ -75,11 +73,6 @@ export function Button({ variant = "primary", className = "", ...props }: Button
 }
 
 export function TopBar({ title }: { title?: string }) {
-  const router = useRouter();
-  const signOut = async () => {
-    await supabase.auth.signOut();
-    router.replace("/login");
-  };
   return (
     <header className="absolute inset-x-0 top-0 z-[500] flex items-center justify-between gap-3 px-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <Link href="/" className="wide rounded-full bg-vest px-4 py-2 text-lg font-black text-ink shadow-md">
@@ -89,9 +82,9 @@ export function TopBar({ title }: { title?: string }) {
         {title && (
           <span className="rounded-full bg-white px-3 py-2 text-sm font-semibold shadow-md">{title}</span>
         )}
-        <button onClick={signOut} className="rounded-full bg-white px-3 py-2 text-sm font-semibold shadow-md">
-          Sign out
-        </button>
+        <Link href="/account" className="rounded-full bg-white px-3 py-2 text-sm font-semibold shadow-md">
+          <span aria-hidden="true">👤</span> Account
+        </Link>
       </div>
     </header>
   );

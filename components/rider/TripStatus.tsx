@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { roadKm } from "@/lib/geo";
+import { liveTripUrl, whatsappLink } from "@/lib/safety";
+import TripChat from "@/components/TripChat";
+import SafetyPanel from "./SafetyPanel";
 import { etaMinutes } from "@/lib/places";
-import { PAYMENT_LABEL, VEHICLE_LABEL, formatSSP, type Ride, type RideStatus, type VehicleType } from "@/lib/types";
+import { PAYMENT_LABEL, VEHICLE_LABEL, formatSSP, type Profile, type Ride, type RideStatus, type VehicleType } from "@/lib/types";
 import { Button } from "@/components/ui";
 import { VEHICLE_ICON } from "./RideOptions";
 
@@ -26,6 +30,8 @@ const STEPS: { status: RideStatus; label: string }[] = [
 
 type Props = {
   ride: Ride;
+  userId: string;
+  profile?: Profile;
   driver: DriverInfo | null;
   busy: boolean;
   onCancel: () => void;
@@ -33,7 +39,8 @@ type Props = {
   onRate: (stars: number) => void;
 };
 
-export default function TripStatus({ ride, driver, busy, onCancel, onDone, onRate }: Props) {
+export default function TripStatus({ ride, userId, profile, driver, busy, onCancel, onDone, onRate }: Props) {
+  const [safetyOpen, setSafetyOpen] = useState(false);
   const name = driver?.profiles?.full_name || "Your driver";
   const firstName = name.split(" ")[0];
   const phone = driver?.profiles?.phone;
@@ -64,9 +71,7 @@ export default function TripStatus({ ride, driver, busy, onCancel, onDone, onRat
   }[ride.status];
 
   const shareText = driver
-    ? `I'm on a Mashi ${VEHICLE_LABEL[driver.vehicle_type].toLowerCase()} with ${name}, plate ${driver.plate_number}` +
-      `${phone ? ` (${phone})` : ""}. From: ${ride.pickup_note || "my pickup point"}. To: ${dropoffName}. ` +
-      `Pickup location: https://maps.google.com/?q=${ride.pickup_lat},${ride.pickup_lng}`
+    ? `Follow my Mashi trip live: ${liveTripUrl(ride.share_token)} (${VEHICLE_LABEL[driver.vehicle_type].toLowerCase()} with ${name}, plate ${driver.plate_number})`
     : "";
 
   if (ride.status === "completed") {
@@ -161,19 +166,41 @@ export default function TripStatus({ ride, driver, busy, onCancel, onDone, onRat
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {phone && (
-              <a href={`tel:${phone}`} className="flex h-11 items-center justify-center rounded-xl bg-ink font-bold text-white">
-                Call
+              <a href={`tel:${phone}`} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-ink font-bold text-white">
+                <span aria-hidden="true">📞</span> Call
               </a>
             )}
+            <TripChat
+              rideId={ride.id}
+              userId={userId}
+              otherName={firstName}
+              quickReplies={["I'm at the pickup", "Coming now", "Where are you?", "Please call me", "Thank you!"]}
+              className={phone ? "" : "col-span-2"}
+            />
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
+              href={whatsappLink(shareText)}
               target="_blank"
               rel="noreferrer"
-              className={`flex h-11 items-center justify-center rounded-xl bg-white font-bold ring-2 ring-ink/80 ${phone ? "" : "col-span-2"}`}
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-white font-bold ring-2 ring-ink/80"
             >
-              Share trip
+              <span aria-hidden="true">📍</span> Share trip
             </a>
+            <button
+              onClick={() => setSafetyOpen(true)}
+              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-murram font-bold text-white"
+            >
+              <span aria-hidden="true">🛡️</span> Safety
+            </button>
           </div>
+          {safetyOpen && (
+            <SafetyPanel
+              ride={ride}
+              profile={profile}
+              driverName={name}
+              plate={driver.plate_number}
+              onClose={() => setSafetyOpen(false)}
+            />
+          )}
         </div>
       )}
 

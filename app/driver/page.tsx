@@ -19,6 +19,7 @@ import {
 } from "@/lib/types";
 import type { Pin } from "@/components/MashiMap";
 import { Button, Choice, ErrorNote, FullScreenMessage, Sheet, TopBar } from "@/components/ui";
+import TripChat from "@/components/TripChat";
 
 const MashiMap = dynamic(() => import("@/components/MashiMap"), { ssr: false });
 
@@ -399,6 +400,12 @@ export default function DriverPage() {
                 </a>
               )}
             </div>
+            <TripChat
+              rideId={ride.id}
+              userId={userId}
+              otherName={rider?.full_name?.split(" ")[0] || "Rider"}
+              quickReplies={["I'm on my way", "I've arrived", "I'm at the gate", "Traffic, 5 minutes", "Where exactly are you?"]}
+            />
             <div className="flex items-baseline justify-between rounded-2xl bg-white/70 px-4 py-3">
               <span className="font-semibold">
                 {PAYMENT_LABEL[ride.payment_method]}, {ride.distance_km.toFixed(1)} km
